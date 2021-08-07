@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker-compose exec django sh -c "cd /project && ./manage.py $*"
