@@ -48,7 +48,6 @@ PROJECT_APPS = [
 ]
 
 EXTERNAL_APPS = [
-    'webpack_loader',
 ]
 
 INSTALLED_APPS = CONTRIB_APPS + PROJECT_APPS + EXTERNAL_APPS
@@ -67,7 +66,6 @@ ROOT_URLCONF = 'convayor-root.urls'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
-    os.path.join(BASE_DIR, "frontend/dist"),
 ]
 
 TEMPLATES = [
@@ -142,10 +140,3 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'dist/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'frontend', 'webpack-stats.json')
-    }
-}
