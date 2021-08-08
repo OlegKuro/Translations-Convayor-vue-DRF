@@ -7,13 +7,39 @@ services:
       - db
     volumes:
       - ${PROJECT_ROOT_DIR}:/project
+    expose:
+      - 8000
     networks:
       translator-app:
         aliases:
           - django
     env_file: .env
+
+  nuxt:
+    build: ./nuxt
+    depends_on:
+      - django
+    expose:
+      - 3000
+    networks:
+      translator-app:
+        aliases:
+          - nuxt
+
+  haproxy:
+    build: ./haproxy
     ports:
-      - "8000:8000"
+      - "80:80"
+      - "10001:10001" #haproxy stats page
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - nuxt
+      - django
+    networks:
+      translator-app:
+        aliases:
+          - balancer
 
   db:
     image: postgres:13
