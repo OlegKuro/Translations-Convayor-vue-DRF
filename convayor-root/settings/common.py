@@ -31,7 +31,7 @@ for path in ('apps',):
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-u%49h-rsa16$3=428#u&ez37!hc+rwkn$$_w!23qqj)wr4zy_6'
-
+AUTH_USER_MODEL = 'user.User'
 # Application definition
 
 CONTRIB_APPS = [
@@ -45,12 +45,13 @@ CONTRIB_APPS = [
 
 PROJECT_APPS = [
     'translations.apps.TranslationsConfig',
+    'user.apps.UserConfig',
 ]
 
 EXTERNAL_APPS = [
 ]
 
-INSTALLED_APPS = CONTRIB_APPS + PROJECT_APPS + EXTERNAL_APPS
+INSTALLED_APPS = PROJECT_APPS + CONTRIB_APPS + EXTERNAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,9 +61,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 ROOT_URLCONF = 'convayor-root.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),

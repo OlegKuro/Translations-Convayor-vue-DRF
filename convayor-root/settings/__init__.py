@@ -7,3 +7,5 @@ from .common import *
 
 if configuration == 'dev':
     from .dev import *
+else:
+    from .prod import *
