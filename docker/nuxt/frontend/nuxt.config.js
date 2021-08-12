@@ -43,16 +43,55 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/toast',
+    '@nuxtjs/auth-next',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: 'http://localhost/api/',
+  },
+  loading: {
+    name: 'chasing-dots',
+    color: '#ff5638',
+    background: 'white',
+    height: '4px'
+  },
+  router: {
+    middleware: 'auth',
+  },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/login',
+            method: 'post',
+            propertyName: 'token',
+          },
+          logout: {
+            url: '/logout',
+            method: 'post',
+          },
+          user: {
+            url: '/me',
+            method: 'get',
+          },
+        },
+        tokenType: 'Bearer',
+      },
+    },
+  },
+  toast: {
+    position: 'bottom-right',
+    duration: 5000
+  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
