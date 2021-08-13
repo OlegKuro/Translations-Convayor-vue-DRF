@@ -39,11 +39,11 @@
             'local',
             { data: this.credentials }
             );
-          this.$toast.success('Успешный вход');
+          this.$toast.success('Successfully logged in');
           this.$nuxt.$router.go({ path: '/' });
         } catch (e) {
           console.log(e);
-          this.$toast.error('Не удалось войти');
+          this.$toast.error('Unable to log in');
         }
       }
     }

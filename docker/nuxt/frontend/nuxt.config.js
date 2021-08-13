@@ -65,20 +65,25 @@ export default {
       local: {
         endpoints: {
           login: {
-            url: '/login',
+            url: '/user/login',
             method: 'post',
             propertyName: 'token',
           },
           logout: {
-            url: '/logout',
+            url: '/user/logout',
             method: 'post',
           },
           user: {
-            url: '/me',
+            url: '/user/me',
             method: 'get',
           },
         },
-        tokenType: 'Bearer',
+        user: {
+          property: false,
+        },
+        token: {
+          type: 'Basic',
+        },
       },
     },
   },
