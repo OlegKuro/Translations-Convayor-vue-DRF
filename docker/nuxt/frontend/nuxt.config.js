@@ -58,7 +58,7 @@ export default {
     height: '4px'
   },
   router: {
-    middleware: 'auth',
+    middleware: ['auth'],
   },
   auth: {
     strategies: {

@@ -36,16 +36,26 @@
       >
         <v-icon
           :title="miniVariant ? 'expand sidebar menu' : 'minify sidebar menu'"
-        >mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
+        >
+          mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}
+        </v-icon>
       </v-btn>
-      <v-toolbar-title v-text="user.email" />
+      <v-toolbar-title v-text="user ? user.email : 'anon'" />
       <v-spacer></v-spacer>
       <div>
         <v-btn
           icon
           @click.stop="toggleDarkMode"
+          title="switch between light/dark mode"
         >
           <v-icon>{{isDark ? 'mdi-white-balance-sunny' : 'mdi-weather-night'}}</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          @click.stop="logout"
+          title="logout"
+        >
+          <v-icon>mdi-logout</v-icon>
         </v-btn>
       </div>
     </v-app-bar>
@@ -95,6 +105,10 @@
     methods: {
       toggleDarkMode() {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      },
+      async logout() {
+        await this.$auth.logout();
+        this.$router.go('/');
       },
     }
   }

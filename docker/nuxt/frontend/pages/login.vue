@@ -12,6 +12,7 @@
     <v-btn
       class="mx-0 mb-4"
       @click="submit"
+      :disabled="isRequestProcessing"
       outlined
       color="primarys"
     >
@@ -29,12 +30,14 @@
         credentials: {
           username: null,
           password: null
-        }
+        },
+        isRequestProcessing: false,
       }
     },
     methods: {
       async submit() {
         try {
+          this.isRequestProcessing = true;
           await this.$auth.loginWith(
             'local',
             { data: this.credentials }
@@ -44,6 +47,8 @@
         } catch (e) {
           console.log(e);
           this.$toast.error('Unable to log in');
+        } finally {
+          this.isRequestProcessing = false;
         }
       }
     }
