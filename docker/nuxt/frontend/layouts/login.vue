@@ -2,7 +2,7 @@
   <v-app light>
     <v-container fill-height>
       <v-layout row wrap align-center justify-center>
-        <v-flex sm12 md9>
+        <v-flex sm12 md6 lg-3>
           <h1 class="display-1 mb-4 primary--text">{{ name }}</h1>
           <v-card>
             <v-card-text>

@@ -31,7 +31,7 @@ for path in ('apps',):
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-u%49h-rsa16$3=428#u&ez37!hc+rwkn$$_w!23qqj)wr4zy_6'
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'users.User'
 # Application definition
 
 CONTRIB_APPS = [
@@ -45,10 +45,11 @@ CONTRIB_APPS = [
 
 PROJECT_APPS = [
     'translations.apps.TranslationsConfig',
-    'user.apps.UserConfig',
+    'users.apps.UserConfig',
 ]
 
 EXTERNAL_APPS = [
+    'rest_framework',
 ]
 
 INSTALLED_APPS = PROJECT_APPS + CONTRIB_APPS + EXTERNAL_APPS
@@ -149,6 +150,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

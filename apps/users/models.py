@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 
 class UserManager(BaseUserManager):
@@ -32,6 +33,11 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+
+    # User roles
+    ROLE_QA = 0
+    ROLE_TRANSLATOR = 1
+
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -39,6 +45,11 @@ class User(AbstractBaseUser):
     )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    roles = ArrayField(
+        models.PositiveSmallIntegerField(),
+        default=list,
+        null=False
+    )
 
     def has_perm(self, perm, obj=None):
         return True

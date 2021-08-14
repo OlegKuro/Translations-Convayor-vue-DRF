@@ -24,7 +24,6 @@
 <script>
   export default {
     layout: 'login',
-    middleware: 'auth',
     data() {
       return {
         credentials: {
