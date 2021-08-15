@@ -50,6 +50,8 @@ services:
       - POSTGRES_DB=postgres=${POSTGRES_DB}
     volumes:
       - database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" #TODO: remove when task is completed
     networks:
       translator-app:
         aliases:
