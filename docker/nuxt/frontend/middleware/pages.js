@@ -2,7 +2,7 @@ export default function ({store}) {
   if (!store.state.auth.loggedIn) {
     return Promise.resolve();
   }
-  
+
   // Set of available sections based on user's roles and role sections availability map
   const {roleToAvailableMenuSections} = store.state.app;
   let myAvailableSections = Object

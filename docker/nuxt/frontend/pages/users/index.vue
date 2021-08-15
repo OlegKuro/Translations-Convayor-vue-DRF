@@ -1,5 +1,15 @@
 <template>
-  <div></div>
+  <div>
+    <v-row justify="right">
+      <v-btn
+        @click="create"
+        small
+        color="primary"
+      >
+        Create
+      </v-btn>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -14,5 +24,10 @@
           users: [],
         }
       },
+      methods: {
+        create() {
+          this.$router.replace({name: 'users-create'});
+        }
+      }
     }
 </script>
