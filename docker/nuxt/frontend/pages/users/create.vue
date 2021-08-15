@@ -5,6 +5,7 @@
       <user-model-form
         v-model="user"
         :disabled="isCreatingNow"
+        ref="userForm"
       ></user-model-form>
     </v-card-text>
     <v-card-actions class="px-4">
@@ -32,7 +33,8 @@
   function userFields() {
     return {
       email: null,
-      password: [null, null],
+      password: null,
+      repeatPassword: null,
       roles: [],
     }
   }
@@ -48,8 +50,15 @@
     methods: {
       clear() {
         this.user = userFields();
+        this.$refs.userForm.$v.$reset();
       },
       async create() {
+        this.$refs.userForm.$v.$reset();
+        await this.$nextTick();
+        this.$refs.userForm.$v.$touch();
+        if (this.$refs.userForm.$v.$invalid) {
+          return
+        }
         try {
           this.isCreatingNow = true;
           await this.$axios.post('/users/', this.prepareUserFields());
@@ -63,7 +72,7 @@
       },
       prepareUserFields() {
         const user = cloneDeep(this.user);
-        user.password = user.password[0];
+        delete user.repeatPassword;
         return user
       },
     }
