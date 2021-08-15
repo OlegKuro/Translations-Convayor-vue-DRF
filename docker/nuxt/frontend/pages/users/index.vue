@@ -4,15 +4,15 @@
 
 <script>
     export default {
-      fetchOnServer: false,
+      name: 'UsersIndex',
       async fetch() {
-        this.users = await this.$axios.get('/users/');
+        const {data} = await this.$axios.get('/users/');
+        this.users = data;
       },
       data() {
         return {
           users: [],
         }
       },
-      name: "UsersIndex",
     }
 </script>

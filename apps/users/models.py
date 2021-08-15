@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
             email,
             password=password,
         )
-        user.is_admin = True
+        user.roles = [User.ADMIN]
         user.save(using=self._db)
         return user
 
@@ -35,8 +35,9 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
 
     # User roles
-    ROLE_QA = 0
-    ROLE_TRANSLATOR = 1
+    ADMIN = 0
+    ROLE_QA = 1
+    ROLE_TRANSLATOR = 2
 
     email = models.EmailField(
         verbose_name='email address',
@@ -60,6 +61,10 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+    @property
+    def is_admin(self):
+        return self.ADMIN in self.roles
 
     USERNAME_FIELD = 'email'
 

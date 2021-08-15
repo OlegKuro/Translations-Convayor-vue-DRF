@@ -8,6 +8,7 @@ class MeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'email',
+            'roles',
         )
 
 

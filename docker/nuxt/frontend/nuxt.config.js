@@ -58,7 +58,11 @@ export default {
     height: '4px'
   },
   router: {
-    middleware: ['auth'],
+    middleware: [
+      'auth',
+      'pages', // puts available for current user pages into vuex store
+      'rbac', // controls whether the page is available for current user according to his\her roles
+    ],
   },
   auth: {
     strategies: {
