@@ -4,18 +4,21 @@
     <v-card-text class="px-4">
       <user-model-form
         v-model="user"
+        :disabled="isCreatingNow"
       ></user-model-form>
     </v-card-text>
     <v-card-actions class="px-4">
       <v-btn
         color="success"
         @click="create"
+        :disabled="isCreatingNow"
       >
         Create
       </v-btn>
       <v-btn
         color="error"
         @click="clear"
+        :disabled="isCreatingNow"
       >
         Clear
       </v-btn>
@@ -39,6 +42,7 @@
     data() {
       return {
         user: userFields(),
+        isCreatingNow: false,
       }
     },
     methods: {
@@ -47,11 +51,14 @@
       },
       async create() {
         try {
+          this.isCreatingNow = true;
           await this.$axios.post('/users/', this.prepareUserFields());
           this.$toast.success('New user created');
           this.$router.replace({name: 'users'});
         } catch (e) {
-          console.log(e);
+          console.error(e);
+        } finally {
+          this.isCreatingNow = false;
         }
       },
       prepareUserFields() {

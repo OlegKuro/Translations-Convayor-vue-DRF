@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-row justify="right">
+  <div class="mt-3">
+    <v-row justify="end">
       <v-btn
         @click="create"
         small

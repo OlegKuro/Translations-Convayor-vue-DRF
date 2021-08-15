@@ -4,6 +4,7 @@
       <v-text-field
         :value="user.email"
         @input="updateField('email', $event)"
+        :disabled="disabled"
         label="User email"
         outlined
         hide-details="auto"
@@ -15,6 +16,7 @@
       <v-text-field
         :value="user.password[0]"
         @input="updateField('password.0', $event)"
+        :disabled="disabled"
         label="password"
         outlined
         hide-details="auto"
@@ -26,6 +28,7 @@
       <v-text-field
         :value="user.password[1]"
         @input="updateField('password.1', $event)"
+        :disabled="disabled"
         label="password again"
         outlined
         hide-details="auto"
@@ -38,6 +41,7 @@
       <v-select
         :value="user.roles"
         :items="rolesOptions"
+        :disabled="disabled"
         @input="updateField('roles', $event)"
         item-value="value"
         item-text="label"
@@ -67,6 +71,10 @@
       user: {
         type: Object,
         required: true,
+      },
+      disabled: {
+        type: Boolean,
+        default: false,
       },
     },
     computed: {
