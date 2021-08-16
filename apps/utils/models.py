@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.conf import settings
 
 
-class CreateAtMixin(models.Model):
+class CreatedAtMixin(models.Model):
     created_at = models.DateTimeField(default=timezone.now, editable=False)
 
     class Meta:

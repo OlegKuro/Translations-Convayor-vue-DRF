@@ -1,10 +1,14 @@
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.filters import OrderingFilter
+from rest_framework.serializers import ValidationError
+from rest_framework.response import Response
 from translations.models import Translation
 from translations.filters import TranslationFilter
-from translations.serializers import TranslationListCreateSerializer
+from translations.serializers import TranslationListCreateSerializer, TranslationRetrieveUpdateSerializer,\
+    TranslationStateChangeSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from utils.permissions import IsObjectAdmin
+from users.models import User
 
 
 class TranslationIndexCreateApiView(ListCreateAPIView):
@@ -23,3 +27,18 @@ class TranslationIndexCreateApiView(ListCreateAPIView):
         'modified_at',
     )
     ordering = '-modified_at'
+
+
+class TranslationRetrieveUpdateApiView(RetrieveUpdateAPIView):
+    serializer_class = TranslationRetrieveUpdateSerializer
+    queryset = Translation.objects.all()
+
+    def flow_update(self, request):
+        self.serializer_class = TranslationStateChangeSerializer
+        return super().update(request, partial=True)
+
+    def update(self, request, *args, **kwargs):
+        if User.ADMIN in request.user.roles:
+            return super().update(request, *args, **kwargs)
+        return self.flow_update(request)
+
