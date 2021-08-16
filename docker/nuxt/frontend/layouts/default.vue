@@ -9,7 +9,7 @@
     >
       <v-list>
         <v-list-item
-          v-for="(item, i) in items"
+          v-for="(item, i) in itemsFiltered"
           :key="i"
           :to="item.to"
           router
@@ -74,6 +74,8 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex';
+
   export default {
     data () {
       return {
@@ -84,8 +86,8 @@
           {
             icon: 'mdi-account-multiple',
             title: 'Users management',
-            to: '/users'
-          }
+            to: '/users',
+          },
         ],
         miniVariant: false,
         right: true,
@@ -93,8 +95,17 @@
       }
     },
     computed: {
+      ...mapState('app', {
+        availableSections: 'availableSections',
+      }),
+      availablePaths() {
+        return this.availableSections.map(section => `/${section}`)
+      },
       isDark() {
         return !!this.$vuetify.theme.dark;
+      },
+      itemsFiltered() {
+        return this.items.filter(item => this.availablePaths.includes(item.to));
       },
     },
     methods: {
