@@ -88,6 +88,21 @@
             title: 'Users management',
             to: '/users',
           },
+          {
+            icon: 'mdi-clipboard-list-outline',
+            title: 'Available tasks',
+            to: '/available-tasks',
+          },
+          {
+            icon: 'mdi-format-list-checks',
+            title: 'Tasks to validate',
+            to: '/qa-tasks',
+          },
+          {
+            icon: 'mdi-check-all',
+            title: 'Completely done tasks',
+            to: '/done-tasks',
+          }
         ],
         miniVariant: false,
         right: true,

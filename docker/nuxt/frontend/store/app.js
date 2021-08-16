@@ -5,12 +5,15 @@ const state = () => ({
   roleToAvailableMenuSections: {
     [ROLES.ADMIN]: [
       'users',
+      'available-tasks',
+      'qa-tasks',
+      'done-tasks',
     ],
     [ROLES.ROLE_TRANSLATOR]: [
-
+      'tasks',
     ],
     [ROLES.ROLE_QA]: [
-
+      'qa-tasks',
     ],
   },
   availableSections: [],
