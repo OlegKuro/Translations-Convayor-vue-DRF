@@ -12,7 +12,9 @@ from utils.models import CreatedAtMixin, ModifiedAtMixin
 class TranslationManager(models.Manager):
 
     def validate_change_state(self, instance, user, new_state):
-        """Changes certain translation state"""
+        """
+        :raises ValidationError
+        """
         if User.ADMIN not in user.roles:
             if not any([(instance.state in self.model.ROLES_TO_AVAILABLE_STATES[role]) for role in user.roles]):
                 raise ValidationError('You have no permission to change state')
@@ -60,7 +62,7 @@ class Translation(CreatedAtMixin, ModifiedAtMixin):
         NEW: {IN_PROGRESS},
         IN_PROGRESS: {NEEDS_QA, VERIFYING},
         NEEDS_QA: {VERIFYING},
-        VERIFYING: {IN_PROGRESS, COMPLETED},
+        VERIFYING: {IN_PROGRESS, COMPLETED, NEW},
         COMPLETED: set(),
     }
 
@@ -80,7 +82,13 @@ class Translation(CreatedAtMixin, ModifiedAtMixin):
     def set_assignees(self, user, new_state):
         """Sets assignee (translator or qa) to current user"""
         if new_state == self.IN_PROGRESS and self.state == self.NEW:
+            # translator took the task
             self.translator = user
         if new_state == self.VERIFYING and self.state == self.NEEDS_QA:
+            # qa took task
             self.assigned_qa = user
+        if new_state == self.NEW and self.state == self.VERIFYING:
+            # qa returned the task into the list.
+            # qa is still assigned to the task and will receive it as soon as it is done
+            self.translator = None
         return self
