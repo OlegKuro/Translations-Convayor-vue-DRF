@@ -50,6 +50,7 @@ PROJECT_APPS = [
 
 EXTERNAL_APPS = [
     'rest_framework',
+    'django_filters',
 ]
 
 INSTALLED_APPS = PROJECT_APPS + CONTRIB_APPS + EXTERNAL_APPS
@@ -148,7 +149,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/api/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type

@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from users.models import User
+from rest_framework.permissions import SAFE_METHODS
 
 
 def has_certain_role(user, role):
@@ -34,3 +35,13 @@ class IsQA(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return has_certain_role(request.user, User.ROLE_QA)
+
+
+class IsObjectAdmin(permissions.BasePermission):
+    message = 'Only Admin can manage objects.'
+
+    def has_permission(self, request, view):
+        return request.method in SAFE_METHODS or has_certain_role(request.user, User.ADMIN)
+
+    def has_object_permission(self, request, view, obj):
+        return has_certain_role(request.user, User.ADMIN)
