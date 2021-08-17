@@ -1,5 +1,5 @@
 <template>
-  <v-flex>
+  <v-flex class="tasks-bar">
     <template v-if="isAdmin">
       <v-select
         :value="state.toString()"
@@ -18,7 +18,7 @@
     </template>
     <template v-else>
 
-      <template v-if="state === TASK_STATES.NEW">
+      <template v-if="state === TASK_STATES.NEW && isTranslator">
         <v-btn
           outlined
           color="secondary"
@@ -26,12 +26,12 @@
           small
           title="Assign this task to me"
           :disabled="disabled"
-          @click="changeState(TASK_STATES.IN_PROGRESS)"
+          @click.stop="changeState(TASK_STATES.IN_PROGRESS)"
         >
           Start translation
         </v-btn>
       </template>
-      <template v-if="state === TASK_STATES.IN_PROGRESS">
+      <template v-if="state === TASK_STATES.IN_PROGRESS && isTranslator">
         <v-btn
           outlined
           color="success"
@@ -39,12 +39,12 @@
           small
           title="Approve translation variant and sent to QA"
           :disabled="disabled"
-          @click="changeState(TASK_STATES.NEEDS_QA)"
+          @click.stop="changeState(TASK_STATES.NEEDS_QA)"
         >
           Send to QA
         </v-btn>
       </template>
-      <template v-if="state === TASK_STATES.NEEDS_QA">
+      <template v-if="state === TASK_STATES.NEEDS_QA && isQa">
         <v-btn
           outlined
           color="success"
@@ -52,12 +52,12 @@
           small
           title="Take to verify"
           :disabled="disabled"
-          @click="changeState(TASK_STATES.VERIFYING)"
+          @click.stop="changeState(TASK_STATES.VERIFYING)"
         >
           Take to verify
         </v-btn>
       </template>
-      <template v-if="state === TASK_STATES.VERIFYING">
+      <template v-if="state === TASK_STATES.VERIFYING && isQa">
         <v-btn
           outlined
           color="error"
@@ -65,7 +65,7 @@
           small
           title="Sends task back into the QA list"
           :disabled="disabled"
-          @click="changeState(TASK_STATES.NEEDS_QA)"
+          @click.stop="changeState(TASK_STATES.NEEDS_QA)"
         >
           Unassign me
         </v-btn>
@@ -76,7 +76,7 @@
           small
           title="Approve translation and send to a client"
           :disabled="disabled"
-          @click="changeState(TASK_STATES.COMPLETED)"
+          @click.stop="changeState(TASK_STATES.COMPLETED)"
         >
           Approve
         </v-btn>
@@ -87,7 +87,7 @@
           small
           title="Assign to the author of translation in order to get new variant"
           :disabled="disabled"
-          @click="changeState(TASK_STATES.IN_PROGRESS)"
+          @click.stop="changeState(TASK_STATES.IN_PROGRESS)"
         >
           Send back to the translator
         </v-btn>
@@ -124,6 +124,12 @@
       isAdmin() {
         return this.$auth.user.roles.includes(ROLES.ADMIN);
       },
+      isTranslator() {
+        return this.$auth.user.roles.includes(ROLES.ROLE_TRANSLATOR);
+      },
+      isQa() {
+        return this.$auth.user.roles.includes(ROLES.ROLE_QA);
+      },
       statesOptions() {
         const options = [];
         Object.entries(TASK_STATES_TRANSLATIONS).forEach(([state, translation]) => {
@@ -142,3 +148,11 @@
     }
   }
 </script>
+
+<style lang="scss">
+  .tasks-bar {
+    .v-btn {
+      margin-bottom: 5px;
+    }
+  }
+</style>

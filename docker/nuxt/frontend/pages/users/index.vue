@@ -22,7 +22,7 @@
         :loading="loading"
         :items="items"
         :options.sync="pagination"
-        :server-items-length="totalUsersCount"
+        :server-items-length="total"
         :footer-props="{
               itemsPerPageOptions: [10, 20, 30, 50],
         }"
@@ -36,6 +36,15 @@
             title="edit"
           >
             <v-icon x-small>mdi-pencil</v-icon>
+          </v-btn>
+          <v-btn
+            @click="deleteUser(item.id)"
+            color="error"
+            fab
+            x-small
+            title="edit"
+          >
+            <v-icon x-small>mdi-delete-outline</v-icon>
           </v-btn>
         </template>
         <template v-slot:item.roles="{item}">
@@ -55,10 +64,10 @@
 </template>
 
 <script>
-    import {ROLES_TRANSLATIONS} from "../../constants/roles";
-    import indexPageListMixin from '@/mixins/index-page-list-mixin';
+  import {ROLES_TRANSLATIONS} from "../../constants/roles";
+  import indexPageListMixin from '@/mixins/index-page-list-mixin';
 
-    export default {
+  export default {
       name: 'UsersIndex',
       async fetch() {
         await this.loadUsers();
@@ -82,6 +91,12 @@
         },
         edit(userId) {
           this.$toast.info(`Editing form for user ${userId} is not implemented yet :C`);
+        },
+        deleteUser(userId) {
+          this.$toast.error(`Let's be civil to our teammates...`);
+          setTimeout(() => {
+            this.$toast.info(`No, I haven't implemented user destroying yet`)
+          }, 3000);
         },
         async loadUsers() {
           if (this.loading) {

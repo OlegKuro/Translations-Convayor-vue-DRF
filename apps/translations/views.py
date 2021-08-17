@@ -40,6 +40,7 @@ class TranslationIndexCreateApiView(ListCreateAPIView):
             available_states = [states for role, states in Translation.ROLES_TO_AVAILABLE_STATES.items()
                                 if role in user.roles]
             available_states = list(set(itertools.chain(*available_states)))
+            print(available_states)
             qs = qs.filter(Q(state__in=available_states) | Q(assigned_qa=user) | Q(translator=user))
         return qs
 
@@ -55,5 +56,6 @@ class TranslationRetrieveUpdateApiView(RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         if User.ADMIN in request.user.roles:
+            kwargs['partial'] = True
             return super().update(request, *args, **kwargs)
         return self.flow_update(request)

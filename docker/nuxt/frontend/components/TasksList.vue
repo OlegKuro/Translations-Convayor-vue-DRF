@@ -16,7 +16,7 @@
           <v-row>
             <v-col
               v-for="item in items"
-              :key="item.name"
+              :key="item.id"
               cols="12"
               sm="6"
               md="4"
@@ -24,7 +24,7 @@
             >
               <v-card
                 :color="item.color"
-                @click="showModal"
+                @click="showModal(item)"
               >
                 <div class="d-flex flex-no-wrap justify-space-between">
                   <div class="flex-grow-0">
@@ -64,24 +64,36 @@
         </template>
       </v-data-iterator>
     </v-card-text>
+    <v-dialog
+      v-model="modalShown"
+      persistent
+      max-width="50vw"
+    >
+      <task-model-form
+        v-model="selectedTask"
+        v-if="selectedTask"
+        @close="closeModal"
+      ></task-model-form>
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
   import indexPageListMixin from '../mixins/index-page-list-mixin';
   import * as moment from 'moment';
-  import {TASK_STATES_TRANSLATIONS, TASK_COLORS} from "../constants/task_states";
+  import {TASK_STATES_TRANSLATIONS, TASK_COLORS, TASK_STATES} from "../constants/task_states";
   import {isString, truncate} from 'lodash';
 
   export default {
     async fetch() {
-      await this.loadTranslations();
+      await this.loadTasks();
     },
     name: "TasksList",
     props: {
       // constant params part
       params: {
         type: Object,
+        defaault: () => {},
       },
     },
     mixins: [
@@ -95,20 +107,31 @@
         },
         TASK_STATES_TRANSLATIONS,
         TASK_COLORS,
+        modalShown: false,
+        selectedTask: null,
       }
     },
     methods: {
-      async loadTranslations() {
+      async loadTasks() {
         if (this.loading) {
           return
         }
         try {
           this.loading = true;
+          const params = new URLSearchParams();
+          Object.entries({
+            page: this.pagination.page,
+            page_size: this.pagination.itemsPerPage,
+            ...this.params,
+          }).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              val.forEach(arrItem => params.append(key, arrItem));
+              return
+            }
+            params.append(key, val);
+          });
           const {data} = await this.$axios.get('/translations/', {
-            params: {
-              page: this.pagination.page,
-              page_size: this.pagination.itemsPerPage,
-            },
+            params,
           });
           this.items = data.results;
           this.total = data.count;
@@ -116,21 +139,30 @@
           this.loading = false;
         }
       },
-      showModal() {
-        this.$toast.error('Modla are not implemented yet');
+      showModal(task) {
+        this.selectedTask = task;
+        this.modalShown = true;
       },
-      async changeTaskState(item, $event) {
+      async closeModal() {
+        this.modalShown = false;
+        await this.$nextTick();
+        this.selectedTask = null;
+      },
+      async changeTaskState(item, state) {
         this.loading = true;
+        if (item.assigned_qa && state === TASK_STATES.NEEDS_QA && item.state === TASK_STATES.IN_PROGRESS) {
+          state = TASK_STATES.VERIFYING;
+        }
         try {
           await this.$axios.put(`/translations/${item.id}`, {
             ...item,
-            state: $event,
+            state: state,
           });
-          item.state = $event;
-          await this.loadTranslations();
+          item.state = state;
         } finally {
           this.loading = false;
         }
+        await this.loadTasks();
       },
     },
     filters: {

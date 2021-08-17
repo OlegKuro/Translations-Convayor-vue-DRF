@@ -9,9 +9,10 @@ const state = () => ({
       'qa-tasks',
       'done-tasks',
       'my',
+      'all',
     ],
     [ROLES.ROLE_TRANSLATOR]: [
-      'tasks',
+      'available-tasks',
       'my',
     ],
     [ROLES.ROLE_QA]: [

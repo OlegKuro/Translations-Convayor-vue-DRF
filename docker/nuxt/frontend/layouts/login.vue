@@ -1,5 +1,5 @@
 <template>
-  <v-app light>
+  <v-app>
     <v-container fill-height>
       <v-layout row wrap align-center justify-center>
         <v-flex sm12 md6 lg-3>
@@ -27,6 +27,9 @@
       ...mapState('app', {
         name: 'name',
       })
-    }
+    },
+    beforeMount() {
+      this.$vuetify.theme.dark = localStorage.getItem('dark');
+    },
   }
 </script>

@@ -15,6 +15,8 @@ class TranslationListCreateSerializer(serializers.ModelSerializer):
             'state',
             'modified_at',
             'created_at',
+            'assigned_qa',
+            'translator',
         )
         extra_kwargs = {
             'id': {'read_only': True},
@@ -35,6 +37,16 @@ class TranslationRetrieveUpdateSerializer(TranslationListCreateSerializer):
         )
         extra_kwargs = {}
 
+    @property
+    def validated_data(self):
+        data = super().validated_data
+        request = self.context.get('request')
+        if data['state'] == Translation.IN_PROGRESS:
+            data['translator'] = request.user
+        if data['state'] == Translation.VERIFYING:
+            data['assigned_qa'] = request.user
+        return data
+
 
 class TranslationStateChangeSerializer(serializers.ModelSerializer):
 
@@ -46,7 +58,7 @@ class TranslationStateChangeSerializer(serializers.ModelSerializer):
             'translation',
         )
         extra_kwargs = {
-            'translation': {'blank': True},
+            'translation': {'allow_blank': True},
         }
 
     def is_valid(self, raise_exception=False):

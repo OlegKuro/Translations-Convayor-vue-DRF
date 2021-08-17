@@ -30,5 +30,5 @@ class TranslationFilter(filters.FilterSet):
 
     def assigned_to_me(self, qs, value):
         if value:
-            qs = qs | self._meta.model.objects.assigned_to_me(self.request.user)
+            qs = self._meta.model.objects.assigned_to_me(self.request.user)
         return qs

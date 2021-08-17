@@ -108,12 +108,20 @@
             icon: 'mdi-check-all',
             title: 'Completely done tasks',
             to: '/done-tasks',
-          }
+          },
+          {
+            icon: 'mdi-account-hard-hat',
+            title: 'All tasks',
+            to: '/all',
+          },
         ],
         miniVariant: false,
         right: true,
         user: this.$auth.user,
       }
+    },
+    beforeMount() {
+      this.$vuetify.theme.dark = localStorage.getItem('dark') !== 'false';
     },
     computed: {
       ...mapState('app', {
@@ -132,6 +140,7 @@
     methods: {
       toggleDarkMode() {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+        localStorage.setItem('dark', this.$vuetify.theme.dark);
       },
       async logout() {
         await this.$auth.logout();
