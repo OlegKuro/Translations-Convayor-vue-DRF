@@ -25,8 +25,8 @@
         :server-items-length="totalUsersCount"
         :footer-props="{
               itemsPerPageOptions: [10, 20, 30, 50],
-              prevIcon: 'mdi-arrow-left',
-              nextIcon: 'mdi-arrow-right',
+              prevIcon: 'mdi-chevron-left',
+              nextIcon: 'mdi-chevron-right',
         }"
       >
         <template v-slot:item.actions="{item}">

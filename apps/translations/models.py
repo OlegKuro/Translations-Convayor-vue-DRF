@@ -16,8 +16,6 @@ class TranslationManager(models.Manager):
         :raises ValidationError
         """
         if User.ADMIN not in user.roles:
-            if not any([(instance.state in self.model.ROLES_TO_AVAILABLE_STATES[role]) for role in user.roles]):
-                raise ValidationError('You have no permission to change state')
             if new_state not in self.model.STATE_FLOW_FROM_TO[instance.state]:
                 raise ValidationError('You can not change state this way')
             if all(

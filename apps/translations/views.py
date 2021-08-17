@@ -1,12 +1,11 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.filters import OrderingFilter
-from rest_framework.serializers import ValidationError
-from rest_framework.response import Response
 from translations.models import Translation
 from translations.filters import TranslationFilter
 from translations.serializers import TranslationListCreateSerializer, TranslationRetrieveUpdateSerializer,\
     TranslationStateChangeSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from translations.permissions import HasTranslationModelPermission
 from utils.permissions import IsObjectAdmin
 from users.models import User
 
@@ -32,6 +31,7 @@ class TranslationIndexCreateApiView(ListCreateAPIView):
 class TranslationRetrieveUpdateApiView(RetrieveUpdateAPIView):
     serializer_class = TranslationRetrieveUpdateSerializer
     queryset = Translation.objects.all()
+    permission_classes = (HasTranslationModelPermission,)
 
     def flow_update(self, request):
         self.serializer_class = TranslationStateChangeSerializer
