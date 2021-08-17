@@ -34,6 +34,9 @@ class TranslationQuerySet(models.QuerySet):
     def without_overdue(self):
         return self.exclude(deadline__lt=datetime.now())
 
+    def assigned_to_me(self, user):
+        return self.filter(models.Q(assigned_qa=user) | models.Q(translator=user))
+
 
 class Translation(CreatedAtMixin, ModifiedAtMixin):
     NEW = 0
