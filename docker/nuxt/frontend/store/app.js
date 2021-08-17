@@ -8,12 +8,15 @@ const state = () => ({
       'available-tasks',
       'qa-tasks',
       'done-tasks',
+      'my',
     ],
     [ROLES.ROLE_TRANSLATOR]: [
       'tasks',
+      'my',
     ],
     [ROLES.ROLE_QA]: [
       'qa-tasks',
+      'my',
     ],
   },
   availableSections: [],

@@ -20,13 +20,11 @@
       <v-data-table
         :headers="headers"
         :loading="loading"
-        :items="users"
-        :options.sync="paginationOptions"
+        :items="items"
+        :options.sync="pagination"
         :server-items-length="totalUsersCount"
         :footer-props="{
               itemsPerPageOptions: [10, 20, 30, 50],
-              prevIcon: 'mdi-chevron-left',
-              nextIcon: 'mdi-chevron-right',
         }"
       >
         <template v-slot:item.actions="{item}">
@@ -58,27 +56,24 @@
 
 <script>
     import {ROLES_TRANSLATIONS} from "../../constants/roles";
+    import indexPageListMixin from '@/mixins/index-page-list-mixin';
 
     export default {
       name: 'UsersIndex',
       async fetch() {
         await this.loadUsers();
       },
+      mixins: [
+          indexPageListMixin,
+      ],
       data() {
         return {
-          users: [],
           ROLES_TRANSLATIONS,
           headers: [
             {text: 'Email', sortable: false, value: 'email'},
             {text: 'Roles', sortable: false, value: 'roles'},
             {text: 'Actions', sortable: false, value: 'actions'},
           ],
-          loading: false,
-          paginationOptions: {
-            page: 1,
-            itemsPerPage: 20,
-          },
-          totalUsersCount: 0,
         }
       },
       methods: {
@@ -90,25 +85,26 @@
         },
         async loadUsers() {
           if (this.loading) {
+            return
           }
           try {
             this.loading = true;
             // prevent overlappings
             const {data} = await this.$axios.get('/users/', {
               params: {
-                page: this.paginationOptions.page,
-                page_size: this.paginationOptions.itemsPerPage,
+                page: this.pagination.page,
+                page_size: this.pagination.itemsPerPage,
               },
             });
-            this.users = data.results;
-            this.totalUsersCount = data.count;
+            this.items = data.results;
+            this.total = data.count;
           } finally {
             this.loading = false;
           }
         }
       },
       watch: {
-        paginationOptions: {
+        pagination: {
           deep: true,
           handler(opts, oldOpts) {
             if (Object.keys(opts).length !== Object.keys(oldOpts).length) {

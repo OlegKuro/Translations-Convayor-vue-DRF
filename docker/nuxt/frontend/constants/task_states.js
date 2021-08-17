@@ -1,0 +1,29 @@
+const TASK_STATES = {
+  NEW: 0,
+  IN_PROGRESS: 1,
+  NEEDS_QA: 2,
+  VERIFYING: 3,
+  COMPLETED: 4,
+};
+
+const TASK_STATES_TRANSLATIONS = {
+  [TASK_STATES.NEW]: 'New',
+  [TASK_STATES.IN_PROGRESS]: 'In progress',
+  [TASK_STATES.NEEDS_QA]: 'Waiting for QA',
+  [TASK_STATES.VERIFYING]: 'QA',
+  [TASK_STATES.COMPLETED]: 'Done',
+};
+
+const TASK_COLORS = {
+  [TASK_STATES.NEW]: 'success',
+  [TASK_STATES.IN_PROGRESS]: 'warning',
+  [TASK_STATES.NEEDS_QA]: 'success',
+  [TASK_STATES.VERIFYING]: 'warning',
+  [TASK_STATES.COMPLETED]: 'primary',
+};
+
+export {
+  TASK_STATES,
+  TASK_STATES_TRANSLATIONS,
+  TASK_COLORS,
+}

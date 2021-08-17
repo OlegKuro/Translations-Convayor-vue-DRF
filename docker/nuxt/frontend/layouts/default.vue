@@ -40,8 +40,14 @@
           mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}
         </v-icon>
       </v-btn>
-      <v-toolbar-title v-text="user ? user.email : 'anon'" />
+      <v-btn
+        color="primary"
+        to="/my"
+      >
+        Assigned to me
+      </v-btn>
       <v-spacer></v-spacer>
+      <span v-text="user ? user.email : 'anon'" class="mr-1"/>
       <div>
         <v-btn
           icon
