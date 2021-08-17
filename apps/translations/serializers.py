@@ -25,12 +25,15 @@ class TranslationListCreateSerializer(serializers.ModelSerializer):
 
 
 class TranslationRetrieveUpdateSerializer(TranslationListCreateSerializer):
+    translation = serializers.CharField(allow_blank=True)
+
     class Meta:
         model = Translation
         fields = TranslationListCreateSerializer.Meta.fields + (
             'assigned_qa',
             'translator',
         )
+        extra_kwargs = {}
 
 
 class TranslationStateChangeSerializer(serializers.ModelSerializer):
@@ -42,6 +45,9 @@ class TranslationStateChangeSerializer(serializers.ModelSerializer):
             'comment',
             'translation',
         )
+        extra_kwargs = {
+            'translation': {'blank': True},
+        }
 
     def is_valid(self, raise_exception=False):
         result = super().is_valid(raise_exception)

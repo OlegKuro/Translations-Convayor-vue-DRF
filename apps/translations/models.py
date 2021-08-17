@@ -63,7 +63,7 @@ class Translation(CreatedAtMixin, ModifiedAtMixin):
         NEW: {IN_PROGRESS},
         IN_PROGRESS: {NEEDS_QA, VERIFYING},
         NEEDS_QA: {VERIFYING},
-        VERIFYING: {IN_PROGRESS, COMPLETED, NEW},
+        VERIFYING: {IN_PROGRESS, COMPLETED, NEEDS_QA},
         COMPLETED: set(),
     }
 
@@ -88,8 +88,7 @@ class Translation(CreatedAtMixin, ModifiedAtMixin):
         if new_state == self.VERIFYING and self.state == self.NEEDS_QA:
             # qa took task
             self.assigned_qa = user
-        if new_state == self.NEW and self.state == self.VERIFYING:
-            # qa returned the task into the list.
-            # qa is still assigned to the task and will receive it as soon as it is done
-            self.translator = None
+        if new_state == self.NEEDS_QA and self.state == self.VERIFYING:
+            # qa unassigned him from the task
+            self.assigned_qa = None
         return self

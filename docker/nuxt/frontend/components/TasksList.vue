@@ -24,9 +24,10 @@
             >
               <v-card
                 :color="item.color"
+                @click="showModal"
               >
                 <div class="d-flex flex-no-wrap justify-space-between">
-                  <div>
+                  <div class="flex-grow-0">
                     <v-card-title
                       class="text-h6 break-word"
                     >
@@ -38,22 +39,16 @@
                     </v-card-subtitle>
 
                     <v-card-actions>
-
-                      <v-btn
-                        outlined
-                        color="secondary"
-                        rounded
-                        small
-                      >
-                        Actions
-                      </v-btn>
+                      <task-actions-bar
+                        :state="item.state"
+                        :disabled="loading"
+                        @change="changeTaskState(item, $event)"
+                      ></task-actions-bar>
                     </v-card-actions>
                   </div>
 
-                  <v-avatar
-                    class="ma-3"
-                    size="75"
-                    tile
+                  <div
+                    class="d-flex ma-3"
                   >
                     <v-chip
                       large
@@ -61,7 +56,7 @@
                     >
                       {{TASK_STATES_TRANSLATIONS[item.state]}}
                     </v-chip>
-                  </v-avatar>
+                  </div>
                 </div>
               </v-card>
             </v-col>
@@ -117,6 +112,22 @@
           });
           this.items = data.results;
           this.total = data.count;
+        } finally {
+          this.loading = false;
+        }
+      },
+      showModal() {
+        this.$toast.error('Modla are not implemented yet');
+      },
+      async changeTaskState(item, $event) {
+        this.loading = true;
+        try {
+          await this.$axios.put(`/translations/${item.id}`, {
+            ...item,
+            state: $event,
+          });
+          item.state = $event;
+          await this.loadTranslations();
         } finally {
           this.loading = false;
         }
