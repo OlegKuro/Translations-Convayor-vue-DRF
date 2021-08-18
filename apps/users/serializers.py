@@ -34,6 +34,16 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(str(exc))
         return value
 
+    def update(self, instance, validated_data):
+        if self.partial and 'password' not in validated_data:
+            return super().update(instance, validated_data)
+        password = validated_data.pop('password')
+        self.validate_password(password)
+        instance = super().update(instance, validated_data)
+        instance.set_password(password)
+        instance.save()
+        return instance
+
     def create(self, validated_data):
         password = validated_data.pop('password')
         self.validate_password(password)

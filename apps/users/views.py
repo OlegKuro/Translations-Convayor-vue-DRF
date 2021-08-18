@@ -1,7 +1,7 @@
 import base64
 
 from django.contrib.auth import authenticate, logout
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListCreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_403_FORBIDDEN, HTTP_200_OK
@@ -42,3 +42,9 @@ class UserListCreateView(ListCreateAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated, IsAdmin)
+
+
+class UserRetrieveUpdateApiView(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAdmin,)
+    serializer_class = UserSerializer

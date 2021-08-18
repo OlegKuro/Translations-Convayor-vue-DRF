@@ -13,7 +13,10 @@
         dense
       ></v-text-field>
     </v-row>
-    <v-row class="mb-2">
+    <v-row
+      v-if="setPassword"
+      class="mb-2"
+    >
       <v-text-field
         :value="user.password"
         @input="updateField('password', $event)"
@@ -90,11 +93,12 @@
         type: Boolean,
         default: false,
       },
+      setPassword: {
+        type: Boolean,
+        default: true,
+      },
     },
     computed: {
-      isCreatingMode() {
-        return 'id' in this.value;
-      },
       rolesOptions() {
         const options = [];
         Object.entries(ROLES_TRANSLATIONS).forEach(([role, translation]) => {
@@ -114,6 +118,7 @@
       },
       passwordError() {
         const errors = [];
+        if (!this.setPassword) return '';
         if (!this.$v.user.password.$dirty) return errors;
         !this.$v.user.password.required && errors.push('Please fill the password');
         !this.$v.user.password.minLength && errors.push('Must contain at least 8 characters');
@@ -123,6 +128,7 @@
       },
       passwordRepeatError() {
         const errors = [];
+        if (!this.setPassword) return '';
         if (!this.$v.user.repeatPassword.$dirty) return errors;
         !this.$v.user.repeatPassword.samePassword && errors.push('Password mismatch');
         return errors;
@@ -147,27 +153,30 @@
       },
     },
     validations() {
-      return {
+      const validators =  {
         user: {
           email: {
             required,
             validateEmail,
-          },
-          password: {
-            required,
-            minLength: minLength(8),
-            maxLength: maxLength(128),
-            differ: not(sameAs('email')),
-          },
-          repeatPassword: {
-            samePassword: sameAs('password'),
           },
           roles: {
             required,
             minLength: minLength(1),
           },
         }
+      };
+      if (this.setPassword) {
+        validators.user.password = {
+          required,
+          minLength: minLength(8),
+          maxLength: maxLength(128),
+          differ: not(sameAs('email')),
+        };
+        validators.user.repeatPassword = {
+          samePassword: sameAs('password'),
+        }
       }
+      return validators;
     }
   }
 </script>

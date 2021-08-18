@@ -101,7 +101,7 @@
           },
           {
             icon: 'mdi-format-list-checks',
-            title: 'Tasks to validate',
+            title: 'Tasks for QA',
             to: '/qa-tasks',
           },
           {

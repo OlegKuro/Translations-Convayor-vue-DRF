@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import {cloneDeep} from 'lodash';
+  import userFormFields from '../../mixins/user-form-mixin';
 
   function userFields() {
     return {
@@ -47,6 +47,9 @@
 
   export default {
     name: "create",
+    mixins: [
+      userFormFields,
+    ],
     data() {
       return {
         user: userFields(),
@@ -59,38 +62,15 @@
         this.$refs.userForm.$v.$reset();
       },
       async create() {
-        this.$refs.userForm.$v.$reset();
-        await this.$nextTick();
-        this.$refs.userForm.$v.$touch();
-        if (this.$refs.userForm.$v.$invalid) {
+        if (this.isCreatingNow) {
           return
         }
-        try {
-          this.isCreatingNow = true;
-          await this.$axios.post('/users/', this.prepareUserFields());
-          this.$toast.success('New user created');
-          this.goBack();
-        } catch (e) {
-          if (e.response.status === 400) {
-            const details = await e.response.data;
-            if ('email' in details) {
-              this.$toast.error(details.email);
-            }
-          } else {
-            this.$toast.error(Object.values(e.response.data).join(' \\ '));
-          }
-          console.error(e)
-        } finally {
-          this.isCreatingNow = false;
+        if (await this.validateForm('userForm')) {
+          return
         }
-      },
-      goBack() {
-        this.$router.replace({name: 'users'});
-      },
-      prepareUserFields() {
-        const user = cloneDeep(this.user);
-        delete user.repeatPassword;
-        return user
+        this.isCreatingNow = true;
+        await this.syncWithBackend('post', '/users/', 'Successfully created new user');
+        this.isCreatingNow = false;
       },
     }
   }

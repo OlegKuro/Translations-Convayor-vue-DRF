@@ -29,7 +29,7 @@
       >
         <template v-slot:item.actions="{item}">
           <v-btn
-            @click="edit(item.id)"
+            :to="`/users/${item.id}`"
             color="secondary"
             fab
             x-small
@@ -88,9 +88,6 @@
       methods: {
         create() {
           this.$router.replace({name: 'users-create'});
-        },
-        edit(userId) {
-          this.$toast.info(`Editing form for user ${userId} is not implemented yet :C`);
         },
         deleteUser(userId) {
           this.$toast.error(`Let's be civil to our teammates...`);
