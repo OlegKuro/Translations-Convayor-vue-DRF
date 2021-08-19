@@ -69,11 +69,11 @@
       persistent
       max-width="50vw"
     >
-      <task-model-form
+      <task-edit-model-form
         v-model="selectedTask"
         v-if="selectedTask"
         @close="closeModal"
-      ></task-model-form>
+      ></task-edit-model-form>
     </v-dialog>
   </v-card>
 </template>

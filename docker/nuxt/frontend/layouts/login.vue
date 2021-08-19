@@ -29,7 +29,7 @@
       })
     },
     beforeMount() {
-      this.$vuetify.theme.dark = localStorage.getItem('dark');
+      this.$vuetify.theme.dark = localStorage.getItem('dark') !== 'false';
     },
   }
 </script>
