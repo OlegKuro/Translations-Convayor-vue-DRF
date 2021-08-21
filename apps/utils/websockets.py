@@ -16,5 +16,5 @@ def broadcast(channel, event, payload):
     requests.post(settings.WEBSOCKETS_BROADCAST_URL, json={
         'channel': channel,
         'event': event,
-        'payload': payload,
+        'data': payload,
     })
