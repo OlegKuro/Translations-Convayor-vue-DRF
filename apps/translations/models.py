@@ -60,11 +60,11 @@ class Translation(CreatedAtMixin, ModifiedAtMixin):
     }
 
     STATE_FLOW_FROM_TO = {
-        NEW: {IN_PROGRESS},
-        IN_PROGRESS: {NEEDS_QA, VERIFYING},
-        NEEDS_QA: {VERIFYING},
-        VERIFYING: {IN_PROGRESS, COMPLETED, NEEDS_QA},
-        COMPLETED: set(),
+        NEW: {IN_PROGRESS, NEW},
+        IN_PROGRESS: {NEEDS_QA, VERIFYING, IN_PROGRESS},
+        NEEDS_QA: {VERIFYING, NEEDS_QA},
+        VERIFYING: {IN_PROGRESS, COMPLETED, NEEDS_QA, VERIFYING},
+        COMPLETED: {COMPLETED},
     }
 
     origin = models.TextField(blank=False, help_text='Origin text to translate')

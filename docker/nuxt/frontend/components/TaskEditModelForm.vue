@@ -14,6 +14,7 @@
           rows="3"
           :value="task.origin"
           @input="updateField('origin', $event)"
+          :readonly="originReadOnly"
           :disabled="disabled"
           class="mr-1"
           label="Text to translate"
@@ -25,6 +26,7 @@
           v-if="!isCreationMode"
           :value="task.translation"
           @input="updateField('translation', $event)"
+          :readonly="translationReadOnly"
           :disabled="disabled"
           rows="3"
           class="ml-1"
@@ -38,7 +40,7 @@
         <datetimepicker
           :value="task.deadline"
           @input="updateField('deadline', $event)"
-          :disabled="disabled"
+          :disabled="disabled || isDeadlineReadOnly"
           label="Deadline (optional)"
           :text-field-props="{
             dense: true,
@@ -51,6 +53,7 @@
         <v-row>
           <v-textarea
             :value="task.comment"
+            :readonly="isCommentReadOnly"
             @input="updateField('comment', $event)"
             :disabled="disabled"
             rows="2"
@@ -60,26 +63,12 @@
             counter
           ></v-textarea>
         </v-row>
-        <v-row>
-          <v-select
-            :items="statesOptions"
-            :value="task.state"
-            @input="updateField('state', $event)"
-            :disabled="disabled"
-            item-value="value"
-            item-text="label"
-            label="Task state"
-            dense
-            single-line
-            outlined
-          ></v-select>
-        </v-row>
-        <v-row>
+        <v-row v-if="isAdmin">
           <v-text-field
             :value="task.assigned_qa"
             @input="updateField('assigned_qa', $event)"
             :disabled="disabled"
-            label="Assigned QA"
+            label="Assigned QA ID"
             dense
             outlined
           ></v-text-field>
@@ -88,7 +77,7 @@
             :value="task.translator"
             @input="updateField('translator', $event)"
             :disabled="disabled"
-            label="Translator"
+            label="Translator ID"
             dense
             outlined
           ></v-text-field>
@@ -107,7 +96,7 @@
         Create
       </v-btn>
       <v-btn
-        v-else
+        v-else-if="task.state != TASK_STATES.COMPLETED || isAdmin"
         :disabled="disabled"
         small
         outlined
@@ -130,8 +119,9 @@
 </template>
 
 <script>
-  import {TASK_STATES_TRANSLATIONS} from "../constants/task_states";
+  import {TASK_STATES_TRANSLATIONS, TASK_STATES} from "../constants/task_states";
   import {cloneDeep, set} from "lodash";
+  import {ROLES} from "../constants/roles";
 
   export default {
     name: "TaskModelForm",
@@ -156,6 +146,11 @@
         default: false,
       },
     },
+    data() {
+      return {
+        TASK_STATES,
+      }
+    },
     computed: {
       statesOptions() {
         const options = [];
@@ -170,6 +165,27 @@
       isCreationMode() {
         return this.mode === 'create';
       },
+      isAdmin() {
+        return this.$auth.user.roles.includes(ROLES.ADMIN);
+      },
+      originReadOnly() {
+        return !this.isAdmin;
+      },
+      translationReadOnly() {
+        return !(this.isAdmin
+          || (this.$auth.user.id == this.task.translator
+          && this.task.state == TASK_STATES.IN_PROGRESS));
+      },
+      isDeadlineReadOnly() {
+        return !this.isAdmin;
+      },
+      isCommentReadOnly() {
+        return !(
+          this.isAdmin ||
+          (this.task.state == TASK_STATES.VERIFYING && this.$auth.user.id == this.task.assigned_qa) ||
+          (this.task.state == TASK_STATES.IN_PROGRESS && this.$auth.user.id == this.task.translator)
+        )
+      },
     },
     methods: {
       create() {
@@ -182,7 +198,6 @@
         const task = cloneDeep(this.task);
         set(task, fieldName, value);
         this.$emit('change', task);
-        // this.touchVuelidateField(fieldName);
       },
     }
   }

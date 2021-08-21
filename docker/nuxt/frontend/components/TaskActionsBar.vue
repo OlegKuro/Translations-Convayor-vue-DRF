@@ -26,7 +26,7 @@
           small
           title="Assign this task to me"
           :disabled="disabled"
-          @click.stop="changeState(TASK_STATES.IN_PROGRESS)"
+          @click.stop="startTranslation"
         >
           Start translation
         </v-btn>
@@ -39,7 +39,7 @@
           small
           title="Approve translation variant and sent to QA"
           :disabled="disabled"
-          @click.stop="changeState(TASK_STATES.NEEDS_QA)"
+          @click.stop="sendToQA"
         >
           Send to QA
         </v-btn>
@@ -52,7 +52,7 @@
           small
           title="Take to verify"
           :disabled="disabled"
-          @click.stop="changeState(TASK_STATES.VERIFYING)"
+          @click.stop="takeQA"
         >
           Take to verify
         </v-btn>
@@ -110,6 +110,7 @@
           return Object.values(TASK_STATES).includes(val);
         },
       },
+      translation: {},
       disabled: {
         type: Boolean,
         default: false,
@@ -142,8 +143,25 @@
       },
     },
     methods: {
-      changeState(newState) {
-          this.$emit('change', +newState);
+      startTranslation() {
+        this.changeState(TASK_STATES.IN_PROGRESS, () => {
+          this.$router.replace({name: 'my'});
+        });
+      },
+      takeQA() {
+        this.changeState(TASK_STATES.VERIFYING, () => {
+          this.$router.replace({name: 'my'});
+        });
+      },
+      sendToQA() {
+        if (this.translation) {
+          this.changeState(TASK_STATES.NEEDS_QA);
+          return
+        }
+        this.$toast.info('Firstly you need to translate.')
+      },
+      changeState(newState, onSuccess) {
+          this.$emit('change', {state: +newState, onSuccess});
       },
     }
   }

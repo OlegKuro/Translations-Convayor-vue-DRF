@@ -41,6 +41,7 @@
                     <v-card-actions>
                       <task-actions-bar
                         :state="item.state"
+                        :translation="item.translation"
                         :disabled="loading"
                         @change="changeTaskState(item, $event)"
                       ></task-actions-bar>
@@ -170,7 +171,7 @@
         await this.$nextTick();
         this.selectedTask = null;
       },
-      async changeTaskState(item, state) {
+      async changeTaskState(item, {state, onSuccess}) {
         this.loading = true;
         if (item.assigned_qa && state === TASK_STATES.NEEDS_QA && item.state === TASK_STATES.IN_PROGRESS) {
           state = TASK_STATES.VERIFYING;
@@ -181,6 +182,7 @@
             state: state,
           });
           item.state = state;
+          onSuccess && onSuccess();
         } finally {
           this.loading = false;
         }
