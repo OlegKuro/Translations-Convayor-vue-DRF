@@ -71,6 +71,7 @@
     >
       <task-edit-model-form
         v-model="selectedTask"
+        :mode="editingMode"
         v-if="selectedTask"
         @close="closeModal"
       ></task-edit-model-form>
@@ -83,6 +84,7 @@
   import * as moment from 'moment';
   import {TASK_STATES_TRANSLATIONS, TASK_COLORS, TASK_STATES} from "../constants/task_states";
   import {isString, truncate} from 'lodash';
+  import {ROLES} from "../constants/roles";
 
   export default {
     async fetch() {
@@ -93,7 +95,7 @@
       // constant params part
       params: {
         type: Object,
-        defaault: () => {},
+        default: () => {},
       },
     },
     mixins: [
@@ -110,6 +112,11 @@
         modalShown: false,
         selectedTask: null,
       }
+    },
+    computed: {
+      editingMode() {
+        return this.$auth.user.roles.includes(ROLES.ADMIN) ? 'edit-admin': 'edit';
+      },
     },
     methods: {
       async loadTasks() {
