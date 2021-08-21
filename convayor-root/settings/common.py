@@ -183,3 +183,5 @@ LOGGING = {
         },
     },
 }
+
+WEBSOCKETS_BROADCAST_URL = 'http://socket-io:4000/broadcast'

@@ -21,6 +21,7 @@ app.post('/broadcast', function (req, res) {
 
     const input = req.body;
     const {channel, event, data} = input;
+    console.log(`received new broadcast event ${event} to channel ${channel}`);
     broadcastToChannel(channel, event, data);
 });
 
