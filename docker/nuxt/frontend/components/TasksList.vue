@@ -86,7 +86,7 @@
   import indexPageListMixin from '../mixins/index-page-list-mixin';
   import * as moment from 'moment';
   import {TASK_STATES_TRANSLATIONS, TASK_COLORS, TASK_STATES} from "../constants/task_states";
-  import {isString, truncate, cloneDeep} from 'lodash';
+  import {isString, truncate, cloneDeep, get} from 'lodash';
   import {ROLES} from "../constants/roles";
 
   export default {
@@ -116,12 +116,25 @@
         selectedTask: null,
       }
     },
+    mounted() {
+      this.$socketIO.subscribe('tasks').on('available', this.newTaskAppearedListener.bind(this));
+    },
+    beforeDestroy() {
+      this.$socketIO.socket.removeAllListeners('available');
+      this.$socketIO.unsubscribe('tasks');
+    },
     computed: {
       editingMode() {
         return this.$auth.user.roles.includes(ROLES.ADMIN) ? 'edit-admin': 'edit';
       },
     },
     methods: {
+      newTaskAppearedListener({id, state}) {
+        if (get(this.params, 'state', []).includes(state)) {
+          this.$toast.info('New available task appeared!');
+          this.loadTasks();
+        }
+      },
       async updateTask() {
         if (this.loading) return;
         try {
