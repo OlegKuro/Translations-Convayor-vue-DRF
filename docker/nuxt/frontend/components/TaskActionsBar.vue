@@ -143,14 +143,30 @@
       },
     },
     methods: {
+      async checkWhetherIHaveNoAssignedTasks(callback) {
+        const {data} = await this.$axios.get('/translations/', {
+          params: {
+            assigned_to_me: true,
+          }
+        });
+        if (data.count === 0) {
+          callback();
+        } else {
+          this.$toast.error('You should finish your tasks before taking another one');
+        }
+      },
       startTranslation() {
-        this.changeState(TASK_STATES.IN_PROGRESS, () => {
-          this.$router.replace({name: 'my'});
+        this.checkWhetherIHaveNoAssignedTasks(() => {
+          this.changeState(TASK_STATES.IN_PROGRESS, () => {
+            this.$router.replace({name: 'my'});
+          });
         });
       },
-      takeQA() {
-        this.changeState(TASK_STATES.VERIFYING, () => {
-          this.$router.replace({name: 'my'});
+      async takeQA() {
+        this.checkWhetherIHaveNoAssignedTasks(() => {
+          this.changeState(TASK_STATES.VERIFYING, () => {
+            this.$router.replace({name: 'my'});
+          });
         });
       },
       sendToQA() {
