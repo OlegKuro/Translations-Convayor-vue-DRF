@@ -6,6 +6,6 @@
 - create your superuser (`./bin/django-admin createsuperuser`)
 
 ---
-- Frontend at localhost
+- Frontend at http://localhost
 - Backend is available at http://localhost/api/*
 - HAProxy stats page at http://localhost:10001/stats
