@@ -4,3 +4,4 @@ psycopg2==2.9.1
 django-cors-headers==3.7.0
 django-filter==2.4.0
 requests==2.22.0
+django-auditlog==1.0a1

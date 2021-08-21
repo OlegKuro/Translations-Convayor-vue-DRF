@@ -51,6 +51,7 @@ PROJECT_APPS = [
 EXTERNAL_APPS = [
     'rest_framework',
     'django_filters',
+    'auditlog',
 ]
 
 INSTALLED_APPS = PROJECT_APPS + CONTRIB_APPS + EXTERNAL_APPS
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',
 ]
 
 CORS_ALLOW_CREDENTIALS = True

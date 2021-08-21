@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from auditlog.registry import auditlog
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -100,3 +101,5 @@ class Translation(CreatedAtMixin, ModifiedAtMixin):
         print('We\'ve sent the result to customer')
         pass
 
+
+auditlog.register(Translation)
