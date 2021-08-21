@@ -9,3 +9,8 @@
 - Frontend at http://localhost
 - Backend is available at http://localhost/api/*
 - HAProxy stats page at http://localhost:10001/stats
+
+---
+Notes:
+- Before running make sure your 80, 4000 and 10001 ports are not allocated
+- Only admin can create new tasks in "All tasks" section
