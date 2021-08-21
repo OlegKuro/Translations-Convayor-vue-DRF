@@ -26,6 +26,15 @@ services:
         aliases:
           - nuxt
 
+  socket-io:
+    build: ./socket-io
+    ports:
+    - "4000:4000"
+    networks:
+      translator-app:
+        aliases:
+          - socket-io
+
   haproxy:
     build: ./haproxy
     ports:
