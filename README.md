@@ -1,6 +1,6 @@
 # Translations-Convayor-vue-DRF
 
-- set up your `.env` file
+- set up your `.env` file in `docker` directory (look at `.env.example`)
 - run `docker-compose up -d` from docker dir
 - run `./bin/django-admin migrate` (you ought to make this file executable if it is not)
 - create your superuser (`./bin/django-admin createsuperuser`)
