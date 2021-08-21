@@ -73,7 +73,9 @@
         v-model="selectedTask"
         :mode="editingMode"
         v-if="selectedTask"
+        :disabled="loading"
         @close="closeModal"
+        @update="updateTask"
       ></task-edit-model-form>
     </v-dialog>
   </v-card>
@@ -83,7 +85,7 @@
   import indexPageListMixin from '../mixins/index-page-list-mixin';
   import * as moment from 'moment';
   import {TASK_STATES_TRANSLATIONS, TASK_COLORS, TASK_STATES} from "../constants/task_states";
-  import {isString, truncate} from 'lodash';
+  import {isString, truncate, cloneDeep} from 'lodash';
   import {ROLES} from "../constants/roles";
 
   export default {
@@ -119,6 +121,18 @@
       },
     },
     methods: {
+      async updateTask() {
+        if (this.loading) return;
+        try {
+          this.loading = true;
+          await this.$axios.patch('/translations/' + this.selectedTask.id, this.selectedTask);
+          this.loading = false;
+          await this.closeModal();
+          this.loadTasks();
+        } finally {
+          this.loading = false;
+        }
+      },
       async loadTasks() {
         if (this.loading) {
           return
@@ -147,7 +161,8 @@
         }
       },
       showModal(task) {
-        this.selectedTask = task;
+        this.selectedTask = cloneDeep(task);
+        this.selectedTask.state = this.selectedTask.state.toString();
         this.modalShown = true;
       },
       async closeModal() {

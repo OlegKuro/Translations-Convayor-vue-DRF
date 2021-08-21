@@ -176,7 +176,7 @@
         this.$emit('create');
       },
       update() {
-
+        this.$emit('update');
       },
       updateField(fieldName, value) {
         const task = cloneDeep(this.task);
