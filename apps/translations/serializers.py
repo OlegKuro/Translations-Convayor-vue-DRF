@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from translations.models import Translation
+from users.models import User
 
 
 class TranslationListCreateSerializer(serializers.ModelSerializer):
@@ -28,6 +29,8 @@ class TranslationListCreateSerializer(serializers.ModelSerializer):
 
 class TranslationRetrieveUpdateSerializer(TranslationListCreateSerializer):
     translation = serializers.CharField(allow_blank=True)
+    assigned_qa = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
+    translator = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
 
     class Meta:
         model = Translation
@@ -41,9 +44,9 @@ class TranslationRetrieveUpdateSerializer(TranslationListCreateSerializer):
     def validated_data(self):
         data = super().validated_data
         request = self.context.get('request')
-        if data['state'] == Translation.IN_PROGRESS:
+        if data['state'] == Translation.IN_PROGRESS and data.get('translator') is None:
             data['translator'] = request.user
-        if data['state'] == Translation.VERIFYING:
+        if data['state'] == Translation.VERIFYING and data.get('assigned_qa') is None:
             data['assigned_qa'] = request.user
         return data
 

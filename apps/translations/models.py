@@ -35,7 +35,10 @@ class TranslationQuerySet(models.QuerySet):
         return self.exclude(deadline__lt=datetime.now())
 
     def assigned_to_me(self, user):
-        return self.filter(models.Q(assigned_qa=user) | models.Q(translator=user))
+        return self.filter(
+            (models.Q(assigned_qa=user) & models.Q(state=Translation.VERIFYING)) |
+            (models.Q(translator=user) & models.Q(state=Translation.IN_PROGRESS))
+        )
 
 
 class Translation(CreatedAtMixin, ModifiedAtMixin):
