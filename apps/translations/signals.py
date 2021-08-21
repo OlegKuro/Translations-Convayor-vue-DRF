@@ -13,3 +13,9 @@ def websockets_detect_new_tasks(sender, instance, created, **kwargs):
             'id': instance.id,
             'state': instance.state,
         })
+
+
+@receiver(post_save, sender=Translation, dispatch_uid='send_to_customer')
+def send_to_customer(sender, instance, created, **kwargs):
+    if instance.state == Translation.COMPLETED:
+        instance.send_to_customer()

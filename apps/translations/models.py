@@ -95,3 +95,8 @@ class Translation(CreatedAtMixin, ModifiedAtMixin):
             # qa unassigned him from the task
             self.assigned_qa = None
         return self
+
+    def send_to_customer(self):
+        print('We\'ve sent the result to customer')
+        pass
+
