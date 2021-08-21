@@ -21,6 +21,7 @@ services:
       - django
     expose:
       - 3000
+    command: "npm run start"
     networks:
       translator-app:
         aliases:

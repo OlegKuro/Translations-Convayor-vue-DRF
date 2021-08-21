@@ -2,7 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   server: {
-      host: '0.0.0.0',
+      host: process.env.NODE_ENV === 'production' ? 'nuxt' : '0.0.0.0',
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -66,6 +66,12 @@ export default {
     ],
   },
   auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/login',
+      home: '/',
+    },
     strategies: {
       local: {
         endpoints: {
@@ -88,6 +94,7 @@ export default {
         },
         token: {
           type: 'Basic',
+          maxAge: 3600 * 24,
         },
       },
     },
@@ -121,7 +128,7 @@ export default {
     babel: {
       plugins: [
         ['@babel/plugin-proposal-private-methods', { loose: true }],
-        ["@babel/plugin-proposal-private-property-in-object", { "loose": true }],
+        ["@babel/plugin-proposal-private-property-in-object", { loose: true }],
       ],
     },
   }

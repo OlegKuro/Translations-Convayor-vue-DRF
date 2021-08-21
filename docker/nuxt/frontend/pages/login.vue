@@ -42,7 +42,7 @@
             { data: this.credentials }
             );
           this.$toast.success('Successfully logged in');
-          this.$nuxt.$router.go({ path: '/' });
+          this.$router.replace('/');
         } catch (e) {
           console.log(e);
           this.$toast.error('Unable to log in');
